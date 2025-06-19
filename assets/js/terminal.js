@@ -33,27 +33,38 @@ function setupNavListeners() {
       e.preventDefault();
       const command = e.target.dataset.command;
 
-      // Simulate terminal command
+      // Append typed command
       const typedLine = document.createElement("div");
       typedLine.className = "line";
-      typedLine.textContent = `root@kali:~# cat ${command}`;
+      typedLine.textContent = `root@kali:~# ${command}`;
       terminalOutput.appendChild(typedLine);
 
-      // Fetch content
+      // Handle clear separately
+      if (command === "clear") {
+          terminalOutput.innerHTML = ""; // remove all output
+          const confirmLine = document.createElement("div");
+          confirmLine.className = "line";
+          confirmLine.textContent = "(terminal cleared)";
+          terminalOutput.appendChild(confirmLine);
+          return;
+        }
+
+      // Fetch content for command
       const res = await fetch(`content/${command}.html`);
       const html = await res.text();
       const temp = document.createElement("div");
       temp.innerHTML = html;
 
-      // Append content line by line
+      // Add content with .output class
       temp.querySelectorAll(".line").forEach(line => {
-        const cloned = line.cloneNode(true);
-        cloned.classList.add("output"); // Make this line white
-        terminalOutput.appendChild(cloned);
+          const cloned = line.cloneNode(true);
+          cloned.classList.add("output");
+          terminalOutput.appendChild(cloned);
       });
 
-      // Move cursor down
+      // Scroll to latest
       terminalOutput.scrollIntoView({ behavior: "smooth", block: "end" });
     });
+
   });
 }
