@@ -47,7 +47,9 @@ function setupNavListeners() {
 
       // Append content line by line
       temp.querySelectorAll(".line").forEach(line => {
-        terminalOutput.appendChild(line.cloneNode(true));
+        const cloned = line.cloneNode(true);
+        cloned.classList.add("output"); // Make this line white
+        terminalOutput.appendChild(cloned);
       });
 
       // Move cursor down
