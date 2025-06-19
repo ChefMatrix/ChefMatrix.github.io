@@ -1,9 +1,11 @@
 console.log("⚙️ terminal.js loaded!");
+
 window.onload = () => {
   console.log("⚙️ window loaded");
   typeIntro();
   setupNavListeners();
 };
+
 
 
 const cmd = "ls Ali_Alzergawi";
