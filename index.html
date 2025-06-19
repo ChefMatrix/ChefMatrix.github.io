@@ -8,12 +8,16 @@
 </head>
 <body>
   <div id="terminal">
-    <div class="line">root@kali:~# ls Ali_Alzergawi</div>
-    <div class="line"><a href="home-lab.html">home-lab</a></div>
-    <div class="line"><a href="https://github.com/ChefMatrix">github-repo</a></div>
-    <div class="line"><a href="about.html">about</a></div>
+    <div class="line" id="cmd-line">
+      root@kali:~# <span id="typed"></span><span class="cursor">█</span>
+    </div>
+
+    <div id="nav" style="display: none;">
+      <div class="line"><a href="home-lab.html">home-lab</a></div>
+      <div class="line"><a href="https://github.com/ChefMatrix">github-repo</a></div>
+      <div class="line"><a href="about.html">about</a></div>
+    </div>
   </div>
 
   <script src="assets/js/main.js"></script>
 </body>
-</html>
