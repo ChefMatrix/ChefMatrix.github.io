@@ -12,6 +12,9 @@ function typeIntro() {
     i++;
     setTimeout(typeIntro, 100);
   } else {
+    // HIDE the first blinking cursor
+    document.querySelector("#cmd-line .cursor").style.display = "none";
+
     setTimeout(() => {
       nav.style.display = "block";
       nextCmd.style.display = "block";
