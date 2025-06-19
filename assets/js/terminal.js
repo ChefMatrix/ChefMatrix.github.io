@@ -22,15 +22,21 @@ function typeIntro() {
     i++;
     setTimeout(typeIntro, 100);
   } else {
-    // HIDE the first blinking cursor
-    document.querySelector("#cmd-line .cursor").style.display = "none";
+    console.log("✅ Finished typing command.");
 
+    // HIDE the blinking cursor
+    const cursor = document.querySelector("#cmd-line .cursor");
+    if (cursor) cursor.style.display = "none";
+
+    // SHOW nav + next command
     setTimeout(() => {
+      console.log("✅ Showing nav + next command");
       nav.style.display = "block";
       nextCmd.style.display = "block";
     }, 300);
   }
 }
+
 
 window.onload = () => {
   typeIntro();
