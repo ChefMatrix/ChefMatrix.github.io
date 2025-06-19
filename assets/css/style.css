@@ -25,12 +25,18 @@ a:hover {
   text-decoration: underline;
 }
 
-.line::after {
-  content: "_";
+.cursor {
+  display: inline-block;
   animation: blink 1s step-end infinite;
+  color: #00ff99;
 }
 
 @keyframes blink {
   50% { opacity: 0; }
 }
+
+#typed {
+  white-space: pre;
+}
+
 
