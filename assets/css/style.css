@@ -10,8 +10,15 @@ body {
   color: #00ff99;
 }
 
+/* Terminal command lines remain green */
 .line {
+  color: #00ff99;
   margin-bottom: 0.4em;
+}
+
+/* Output text (from fetched pages) becomes white */
+.line.output {
+  color: white;
 }
 
 #terminal a {
