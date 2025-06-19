@@ -6,8 +6,6 @@ window.onload = () => {
   setupNavListeners();
 };
 
-
-
 const cmd = "ls Ali_Alzergawi";
 const typed = document.getElementById("typed");
 const nav = document.getElementById("nav");
@@ -24,11 +22,11 @@ function typeIntro() {
   } else {
     console.log("✅ Finished typing command.");
 
-    // HIDE the blinking cursor
-    const cursor = document.querySelector("#cmd-line .cursor");
-    if (cursor) cursor.style.display = "none";
+    // Remove the first cursor
+    const topCursor = document.querySelector(".top-cursor");
+    if (topCursor) topCursor.remove();
 
-    // SHOW nav + next command
+    // Show nav + second prompt
     setTimeout(() => {
       console.log("✅ Showing nav + next command");
       nav.style.display = "block";
