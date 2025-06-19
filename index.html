@@ -6,16 +6,18 @@
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
   <body>
-    <div id="terminal">
-      <div class="line" id="cmd-line">
-        root@kali:~# <span id="typed"></span><span class="cursor">█</span>
-      </div>
-      <div id="nav" style="display:none;">
-        <div class="line"><a href="home-lab.html">home-lab</a></div>
-        <div class="line"><a href="https://github.com/ChefMatrix">github-repo</a></div>
-        <div class="line"><a href="about.html">about</a></div>
-      </div>
+  <div id="terminal">
+    <div class="line">root@kali:~# <span id="typed"></span><span class="cursor">█</span></div>
+
+    <div id="nav" style="display:none;">
+      <div class="line"><a href="#" data-command="home-lab">home-lab</a></div>
+      <div class="line"><a href="https://github.com/ChefMatrix" target="_blank">github-repo</a></div>
+      <div class="line"><a href="#" data-command="about">about</a></div>
     </div>
-    <script src="assets/js/main.js"></script>
-  </body>
-</html>
+
+    <div id="terminal-output"></div>
+    <div class="line" id="next-cmd" style="display:none;">root@kali:~# <span class="cursor">█</span></div>
+  </div>
+
+  <script src="assets/js/terminal.js"></script>
+</body>
