@@ -1,34 +1,12 @@
 body {
-  background-color: #000;
+  background: black;
   color: #00ff99;
   font-family: 'Courier New', monospace;
-  font-size: 1.1rem;
-  padding: 2rem;
-  margin: 0;
+  padding: 2em;
 }
 
-#terminal {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.line {
-  margin-bottom: 0.5rem;
-}
-
-a {
-  color: #00ff99;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-.cursor {
-  display: inline-block;
+cursor, .cursor {
   animation: blink 1s step-end infinite;
-  color: #00ff99;
 }
 
 @keyframes blink {
@@ -39,4 +17,6 @@ a:hover {
   white-space: pre;
 }
 
-
+#line, .line {
+  line-height: 1.5em;
+}
