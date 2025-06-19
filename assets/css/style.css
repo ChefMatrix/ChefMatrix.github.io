@@ -36,3 +36,8 @@ body {
   50% { opacity: 0; }
   100% { opacity: 1; }
 }
+
+/* Navigation links styled as white */
+#nav a {
+  color: white;
+}
