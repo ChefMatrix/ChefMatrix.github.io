@@ -47,38 +47,39 @@ function setupNavListeners() {
       e.preventDefault();
       const command = e.target.dataset.command;
 
-      // Append typed command
-      const typedLine = document.createElement("div");
-      typedLine.className = "line";
-      typedLine.textContent = `root@kali:~# ${command}`;
-      terminalOutput.appendChild(typedLine);
-
-      // Handle clear separately
+      // Skip fetch for 'clear'
       if (command === "clear") {
-          terminalOutput.innerHTML = ""; // remove all output
-          const confirmLine = document.createElement("div");
-          confirmLine.className = "line";
-          confirmLine.textContent = "(terminal cleared)";
-          terminalOutput.appendChild(confirmLine);
-          return;
+        terminalOutput.innerHTML = "";
+        const confirmLine = document.createElement("div");
+        confirmLine.className = "line";
+        confirmLine.textContent = "(terminal cleared)";
+        terminalOutput.appendChild(confirmLine);
+        return;
+      }
+
+      // Create line container for the command to be typed
+      const newLine = document.createElement("div");
+      newLine.className = "line";
+      terminalOutput.appendChild(newLine);
+    
+      // Simulate typing "ls [command]" like a real terminal
+      const typedCommand = `ls ${command}`;
+      let charIndex = 0;
+
+      function typeCommand() {
+        if (charIndex < typedCommand.length) {
+          newLine.textContent += typedCommand.charAt(charIndex);
+          charIndex++;
+          setTimeout(typeCommand, 100); // Matches intro speed
+        } else {
+          // After typing completes, fetch and render content
+          fetchAndDisplayContent(command);
         }
+      }
 
-      // Fetch content for command
-      const res = await fetch(`content/${command}.html`);
-      const html = await res.text();
-      const temp = document.createElement("div");
-      temp.innerHTML = html;
-
-      // Add content with .output class
-      temp.querySelectorAll(".line").forEach(line => {
-          const cloned = line.cloneNode(true);
-          cloned.classList.add("output");
-          terminalOutput.appendChild(cloned);
-      });
-
-      // Scroll to latest
-      terminalOutput.scrollIntoView({ behavior: "smooth", block: "end" });
+      typeCommand(); // Begin typing
     });
+
 
   });
 }
