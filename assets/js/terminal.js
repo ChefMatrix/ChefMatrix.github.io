@@ -79,7 +79,32 @@ function setupNavListeners() {
 
       typeCommand(); // Begin typing
     });
-
-
   });
+
+  /**
+ * Fetches HTML content for a command and appends it to the terminal output.
+ * Applies .output class to each line.
+ */
+async function fetchAndDisplayContent(command) {
+  try {
+    const res = await fetch(`content/${command}.html`);
+    const html = await res.text();
+    const temp = document.createElement("div");
+    temp.innerHTML = html;
+
+    temp.querySelectorAll(".line").forEach(line => {
+      const cloned = line.cloneNode(true);
+      cloned.classList.add("output"); // Make text white
+      terminalOutput.appendChild(cloned);
+    });
+
+    terminalOutput.scrollIntoView({ behavior: "smooth", block: "end" });
+  } catch (err) {
+    const errorLine = document.createElement("div");
+    errorLine.className = "line output";
+    errorLine.textContent = `(error loading content for "${command}")`;
+    terminalOutput.appendChild(errorLine);
+  }
+}
+
 }
