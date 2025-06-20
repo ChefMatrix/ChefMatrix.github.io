@@ -41,13 +41,16 @@ window.onload = () => {
   setupNavListeners();
 };
 
+/**
+ * Attaches click listeners to nav links, types the command, then fetches and displays the content.
+ */
 function setupNavListeners() {
   document.querySelectorAll("[data-command]").forEach(link => {
-    link.addEventListener("click", async (e) => {
+    link.addEventListener("click", (e) => {
       e.preventDefault();
       const command = e.target.dataset.command;
 
-      // Skip fetch for 'clear'
+      // Handle the "clear" command instantly
       if (command === "clear") {
         terminalOutput.innerHTML = "";
         const confirmLine = document.createElement("div");
@@ -57,31 +60,31 @@ function setupNavListeners() {
         return;
       }
 
-      // Create line container for the command to be typed
+      // Simulate typing "ls [command]" like a real terminal
+      const typedCommand = `ls ${command}`;
       const newLine = document.createElement("div");
       newLine.className = "line";
       terminalOutput.appendChild(newLine);
-    
-      // Simulate typing "ls [command]" like a real terminal
-      const typedCommand = `ls ${command}`;
+
       let charIndex = 0;
 
-      function typeCommand() {
+      function typeCommandCharByChar() {
         if (charIndex < typedCommand.length) {
           newLine.textContent += typedCommand.charAt(charIndex);
           charIndex++;
-          setTimeout(typeCommand, 100); // Matches intro speed
+          setTimeout(typeCommandCharByChar, 100); // Typing speed
         } else {
-          // After typing completes, fetch and render content
+          // Once typing is done, fetch content
           fetchAndDisplayContent(command);
         }
       }
 
-      typeCommand(); // Begin typing
+      typeCommandCharByChar();
     });
   });
+}
 
-  /**
+ /**
  * Fetches HTML content for a command and appends it to the terminal output.
  * Applies .output class to each line.
  */
@@ -94,11 +97,22 @@ async function fetchAndDisplayContent(command) {
 
     temp.querySelectorAll(".line").forEach(line => {
       const cloned = line.cloneNode(true);
-      cloned.classList.add("output"); // Make text white
+      cloned.classList.add("output");
       terminalOutput.appendChild(cloned);
     });
 
+    // Add a new prompt line at the end after showing content
+    const promptLine = document.createElement("div");
+    promptLine.className = "line";
+    promptLine.textContent = "root@kali:~# ";
+    const cursor = document.createElement("span");
+    cursor.className = "cursor bottom-cursor";
+    cursor.textContent = "█";
+    promptLine.appendChild(cursor);
+    terminalOutput.appendChild(promptLine);
+
     terminalOutput.scrollIntoView({ behavior: "smooth", block: "end" });
+
   } catch (err) {
     const errorLine = document.createElement("div");
     errorLine.className = "line output";
@@ -107,4 +121,3 @@ async function fetchAndDisplayContent(command) {
   }
 }
 
-}
