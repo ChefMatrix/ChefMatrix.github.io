@@ -62,11 +62,12 @@ function setupNavListeners() {
 
       // Simulate typing "ls [command]" like a real terminal
       const typedCommand = `ls ${command}`;
-      // 🧹 Remove existing prompt line (with cursor) if it exists
-      const existingPrompt = document.querySelector(".line.prompt");
-        if (existingPrompt) {
-          existingPrompt.remove();
-        }
+      // 🧊 Deactivate existing prompt (keep text, remove cursor)
+      const existingCursor = document.querySelector(".prompt .cursor");
+      if (existingCursor) {
+        existingCursor.remove(); // removes the blinking block only
+      }
+
 
       const newLine = document.createElement("div");
       newLine.className = "line";
