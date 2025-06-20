@@ -62,6 +62,12 @@ function setupNavListeners() {
 
       // Simulate typing "ls [command]" like a real terminal
       const typedCommand = `ls ${command}`;
+      // 🧹 Remove existing prompt line (with cursor) if it exists
+      const existingPrompt = document.querySelector(".line.prompt");
+        if (existingPrompt) {
+          existingPrompt.remove();
+        }
+
       const newLine = document.createElement("div");
       newLine.className = "line";
       terminalOutput.appendChild(newLine);
@@ -103,7 +109,7 @@ async function fetchAndDisplayContent(command) {
 
     // Add a new prompt line at the end after showing content
     const promptLine = document.createElement("div");
-    promptLine.className = "line";
+    promptLine.className = "line prompt"; // Used for cleanup before typing
     promptLine.textContent = "root@kali:~# ";
     const cursor = document.createElement("span");
     cursor.className = "cursor bottom-cursor";
