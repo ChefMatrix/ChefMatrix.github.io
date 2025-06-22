@@ -1,7 +1,8 @@
+// ✅ terminal.js updated to handle typed navigation commands with single prompt behavior
+
 console.log("⚙️ terminal.js loaded!");
 
 window.onload = () => {
-  console.log("⚙️ window loaded");
   typeIntro();
   setupNavListeners();
 };
@@ -11,120 +12,96 @@ const typed = document.getElementById("typed");
 const nav = document.getElementById("nav");
 const nextCmd = document.getElementById("next-cmd");
 const terminalOutput = document.getElementById("terminal-output");
+const mainCursor = document.querySelector(".cursor");
 
 let i = 0;
 
+// Types the initial command slowly, then reveals nav and prompt
 function typeIntro() {
   if (i < cmd.length) {
     typed.textContent += cmd.charAt(i);
     i++;
     setTimeout(typeIntro, 100);
   } else {
-    console.log("✅ Finished typing command.");
+    mainCursor.style.display = "none"; // Hide first-line cursor
 
-    // Remove the first cursor
-    const topCursor = document.querySelector(".top-cursor");
-    if (topCursor) topCursor.remove();
-
-    // Show nav + second prompt
+    // Show nav and next prompt line
     setTimeout(() => {
-      console.log("✅ Showing nav + next command");
       nav.style.display = "block";
       nextCmd.style.display = "block";
     }, 300);
   }
 }
 
-
-window.onload = () => {
-  typeIntro();
-  setupNavListeners();
-};
-
-/**
- * Attaches click listeners to nav links, types the command, then fetches and displays the content.
- */
 function setupNavListeners() {
   document.querySelectorAll("[data-command]").forEach(link => {
-    link.addEventListener("click", (e) => {
+    link.addEventListener("click", async (e) => {
       e.preventDefault();
-      const command = e.target.dataset.command;
 
-      // Handle the "clear" command instantly
+      const command = e.target.dataset.command;
+      if (!command) return;
+
+      // If clear, reset all content but leave nav and prompt
       if (command === "clear") {
         terminalOutput.innerHTML = "";
         const confirmLine = document.createElement("div");
-        confirmLine.className = "line";
+        confirmLine.className = "line output";
         confirmLine.textContent = "(terminal cleared)";
         terminalOutput.appendChild(confirmLine);
+        scrollToBottom();
         return;
       }
 
-      // Simulate typing "ls [command]" like a real terminal
-      const typedCommand = `ls ${command}`;
-      // 🧊 Deactivate existing prompt (keep text, remove cursor)
-      const existingCursor = document.querySelector(".prompt .cursor");
-      if (existingCursor) {
-        existingCursor.remove(); // removes the blinking block only
-      }
+      // Hide the prompt temporarily and type the command slowly
+      nextCmd.style.display = "none";
 
+      const lineContainer = document.createElement("div");
+      lineContainer.className = "line";
+      terminalOutput.appendChild(lineContainer);
 
-      const newLine = document.createElement("div");
-      newLine.className = "line";
-      terminalOutput.appendChild(newLine);
+      await simulateTypedCommand(lineContainer, command);
 
-      let charIndex = 0;
+      // Fetch and append output
+      const res = await fetch(`content/${command}.html`);
+      const html = await res.text();
+      const temp = document.createElement("div");
+      temp.innerHTML = html;
 
-      function typeCommandCharByChar() {
-        if (charIndex < typedCommand.length) {
-          newLine.textContent += typedCommand.charAt(charIndex);
-          charIndex++;
-          setTimeout(typeCommandCharByChar, 100); // Typing speed
-        } else {
-          // Once typing is done, fetch content
-          fetchAndDisplayContent(command);
-        }
-      }
+      temp.querySelectorAll(".line").forEach(line => {
+        const cloned = line.cloneNode(true);
+        cloned.classList.add("output");
+        terminalOutput.appendChild(cloned);
+      });
 
-      typeCommandCharByChar();
+      // Show the prompt again
+      nextCmd.style.display = "block";
+      scrollToBottom();
     });
   });
 }
 
- /**
- * Fetches HTML content for a command and appends it to the terminal output.
- * Applies .output class to each line.
- */
-async function fetchAndDisplayContent(command) {
-  try {
-    const res = await fetch(`content/${command}.html`);
-    const html = await res.text();
-    const temp = document.createElement("div");
-    temp.innerHTML = html;
+// Simulate typing a command character by character
+async function simulateTypedCommand(container, command) {
+  return new Promise(resolve => {
+    let j = 0;
+    const prefix = "root@kali:~# ";
+    container.textContent = prefix;
 
-    temp.querySelectorAll(".line").forEach(line => {
-      const cloned = line.cloneNode(true);
-      cloned.classList.add("output");
-      terminalOutput.appendChild(cloned);
-    });
+    function typeChar() {
+      if (j < command.length) {
+        container.textContent = prefix + command.slice(0, j + 1);
+        j++;
+        setTimeout(typeChar, 100);
+      } else {
+        resolve();
+      }
+    }
 
-    // Add a new prompt line at the end after showing content
-    const promptLine = document.createElement("div");
-    promptLine.className = "line prompt"; // Used for cleanup before typing
-    promptLine.textContent = "root@kali:~# ";
-    const cursor = document.createElement("span");
-    cursor.className = "cursor bottom-cursor";
-    cursor.textContent = "█";
-    promptLine.appendChild(cursor);
-    terminalOutput.appendChild(promptLine);
-
-    terminalOutput.scrollIntoView({ behavior: "smooth", block: "end" });
-
-  } catch (err) {
-    const errorLine = document.createElement("div");
-    errorLine.className = "line output";
-    errorLine.textContent = `(error loading content for "${command}")`;
-    terminalOutput.appendChild(errorLine);
-  }
+    typeChar();
+  });
 }
 
+// Scroll terminal view to latest prompt/output
+function scrollToBottom() {
+  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+}
