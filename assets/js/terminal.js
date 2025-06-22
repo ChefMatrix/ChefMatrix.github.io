@@ -39,7 +39,10 @@ function setupNavListeners() {
       e.preventDefault();
 
       const command = e.target.dataset.command;
-      if (!command) return;
+      if (command === "github-repo") {
+        window.open("https://github.com/ChefMatrix", "_blank");
+        return;
+      }
 
       // If clear, reset all content but leave nav and prompt
       if (command === "clear") {
