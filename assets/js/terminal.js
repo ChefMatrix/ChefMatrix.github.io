@@ -7,7 +7,7 @@ window.onload = () => {
   setupNavListeners();
 };
 
-const cmd = "ls Ali_Alzergawi";
+const cmd = "cd Ali_Alzergawi";
 const typed = document.getElementById("typed");
 const nav = document.getElementById("nav");
 const nextCmd = document.getElementById("next-cmd");
